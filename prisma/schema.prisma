@@ -10,9 +10,84 @@ generator client {
   provider = "prisma-client-js"
 }
 
-model Post {
-  id    String @id @default(auto()) @map("_id") @db.ObjectId
-  slug  String @unique
-  title String
-  body  String
+enum Role {
+  USER
+  ADMIN
+}
+
+model User {
+  id         String    @id @default(auto()) @map("_id") @db.ObjectId
+  email      String
+  password   String
+  firstName  String
+  lastName   String
+  phone      String
+  address    Address
+  payments   Payment[]
+  role       Role      @default(USER)
+  createdAt  DateTime  @default(now())
+  modifiedAt DateTime  @default(now()) @updatedAt
+}
+
+model Product {
+  id          String      @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  desc        String
+  price       Float
+  categoryIDs String[]    @db.ObjectId
+  categories  Category[]  @relation(fields: [categoryIDs], references: [id])
+  createdAt   DateTime    @default(now())
+  modifiedAt  DateTime    @default(now()) @updatedAt
+  OrderItem   OrderItem[]
+}
+
+model Order {
+  id         String      @id @default(auto()) @map("_id") @db.ObjectId
+  total      Float
+  items      OrderItem[]
+  payment    Payment     @relation(fields: [paymentID], references: [id])
+  paymentID  String      @unique @db.ObjectId
+  createdAt  DateTime    @default(now())
+  modifiedAt DateTime    @default(now()) @updatedAt
+  paymentId  String      @db.ObjectId
+}
+
+model Payment {
+  id         String        @id @default(auto()) @map("_id") @db.ObjectId
+  status     PaymentStatus @default(WAITING)
+  user       User          @relation(fields: [userId], references: [id])
+  order      Order?
+  orderID    String        @db.ObjectId
+  createdAt  DateTime      @default(now())
+  modifiedAt DateTime      @default(now()) @updatedAt
+  userId     String        @db.ObjectId
+}
+
+model Category {
+  id         String    @id @default(auto()) @map("_id") @db.ObjectId
+  name       String
+  productIDs String[]  @db.ObjectId
+  products   Product[] @relation(fields: [productIDs], references: [id])
+}
+
+model OrderItem {
+  id        String  @id @default(auto()) @map("_id") @db.ObjectId
+  product   Product @relation(fields: [productId], references: [id])
+  productId String  @db.ObjectId
+  quantity  Int
+  Order     Order?  @relation(fields: [orderId], references: [id])
+  orderId   String? @db.ObjectId
+}
+
+enum PaymentStatus {
+  WAITING
+  SHIPPING
+  COMPLETED
+}
+
+type Address {
+  addressLine String
+  city        String
+  country     String
+  phone       String
 }
