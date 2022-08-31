@@ -1,6 +1,6 @@
 import { IsEmail, IsMongoId, IsObject, IsOptional, IsPhoneNumber, IsString } from 'class-validator';
 
-export class CreateUserDto {
+export class UserDto {
     @IsMongoId()
     @IsOptional()
     public id: string;

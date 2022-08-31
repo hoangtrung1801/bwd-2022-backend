@@ -1,10 +1,11 @@
 import { OrderDto } from '@/dtos/orders.dto';
 import { HttpException } from '@/exceptions/HttpException';
-import { Order, PrismaClient } from '@prisma/client';
+import { Order, Payment, PrismaClient } from '@prisma/client';
 import { isEmpty } from 'class-validator';
 
 class OrdersService {
     public orders = new PrismaClient().order;
+    public payments = new PrismaClient().payment;
 
     public async findAll(): Promise<Order[]> {
         const allOrders = await this.orders.findMany({
@@ -59,6 +60,21 @@ class OrdersService {
 
         const order = await this.orders.delete({ where: { id: orderId } });
         return order;
+    }
+
+    public async findByUser(userId: string): Promise<Order[]> {
+        if (isEmpty(userId)) throw new HttpException(400, 'userId is empty');
+
+        const userPayments = await this.payments.findMany({
+            where: {
+                userID: userId,
+            },
+            include: {
+                order: true,
+            },
+        });
+        const userOrders = userPayments.map(payment => payment.order);
+        return userOrders;
     }
 }
 

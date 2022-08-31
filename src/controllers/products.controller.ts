@@ -1,5 +1,5 @@
 import { CreateProductDto, ProductDto } from '@/dtos/products.dto';
-import StatusCode from '@/interfaces/status.enum';
+import StatusResponse from '@/interfaces/status.enum';
 import ProductsService from '@/services/products.service';
 import { Product } from '@prisma/client';
 import { NextFunction, Request, Response } from 'express';
@@ -12,7 +12,7 @@ class ProductsController {
             const allProducts = await this.productsService.findAll();
 
             res.status(200).json({
-                status: StatusCode.SUCCESS,
+                status: StatusResponse.SUCCESS,
                 data: allProducts,
             });
         } catch (error) {
@@ -26,7 +26,7 @@ class ProductsController {
             const product = await this.productsService.findById(productId);
 
             res.status(200).json({
-                status: StatusCode.SUCCESS,
+                status: StatusResponse.SUCCESS,
                 data: product,
             });
         } catch (error) {
@@ -40,7 +40,7 @@ class ProductsController {
             const product: Product = await this.productsService.create(productData);
 
             res.status(201).json({
-                status: StatusCode.SUCCESS,
+                status: StatusResponse.SUCCESS,
                 data: product,
             });
         } catch (error) {
@@ -55,7 +55,7 @@ class ProductsController {
             const product: Product = await this.productsService.update(productId, productData);
 
             res.status(200).json({
-                status: StatusCode.SUCCESS,
+                status: StatusResponse.SUCCESS,
                 data: product,
             });
         } catch (error) {
@@ -69,7 +69,7 @@ class ProductsController {
             const product: Product = await this.productsService.delete(producId);
 
             res.status(200).json({
-                status: StatusCode.SUCCESS,
+                status: StatusResponse.SUCCESS,
                 data: product,
             });
         } catch (error) {

@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import { HttpException } from '@exceptions/HttpException';
 import { logger } from '@utils/logger';
-import StatusCode from '@/interfaces/status.enum';
+import StatusResponse from '@/interfaces/status.enum';
 
 const errorMiddleware = (error: HttpException, req: Request, res: Response, next: NextFunction) => {
     try {
@@ -9,7 +9,7 @@ const errorMiddleware = (error: HttpException, req: Request, res: Response, next
         const message: string = error.message || 'Something went wrong';
 
         logger.error(`[${req.method}] ${req.path} >> StatusCode:: ${status}, Message:: ${message}`);
-        res.status(status).json({ status: StatusCode.FAILED, message });
+        res.status(status).json({ status: StatusResponse.FAILED, message });
     } catch (error) {
         next(error);
     }

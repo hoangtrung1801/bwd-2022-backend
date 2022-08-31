@@ -1,5 +1,5 @@
 import { PaymentDto } from '@/dtos/payments.dto';
-import StatusCode from '@/interfaces/status.enum';
+import StatusResponse from '@/interfaces/status.enum';
 import PaymentsService from '@/services/payments.service';
 import { Payment } from '@prisma/client';
 import { NextFunction, Request, Response } from 'express';
@@ -12,7 +12,7 @@ class PaymentsController {
             const allPayments = await this.productsService.findAll();
 
             res.status(200).json({
-                status: StatusCode.SUCCESS,
+                status: StatusResponse.SUCCESS,
                 data: allPayments,
             });
         } catch (error) {
@@ -26,7 +26,7 @@ class PaymentsController {
             const payment: Payment = await this.productsService.findById(paymentId);
 
             res.status(200).json({
-                status: StatusCode.SUCCESS,
+                status: StatusResponse.SUCCESS,
                 data: payment,
             });
         } catch (error) {
@@ -40,7 +40,7 @@ class PaymentsController {
             const payment: Payment = await this.productsService.create(paymentData);
 
             res.status(201).json({
-                status: StatusCode.SUCCESS,
+                status: StatusResponse.SUCCESS,
                 data: payment,
             });
         } catch (error) {
@@ -55,7 +55,7 @@ class PaymentsController {
             const payment: Payment = await this.productsService.update(paymentId, paymentData);
 
             res.status(200).json({
-                status: StatusCode.SUCCESS,
+                status: StatusResponse.SUCCESS,
                 data: payment,
             });
         } catch (error) {
@@ -69,7 +69,7 @@ class PaymentsController {
             const payment: Payment = await this.productsService.delete(paymentId);
 
             res.status(200).json({
-                status: StatusCode.SUCCESS,
+                status: StatusResponse.SUCCESS,
                 data: payment,
             });
         } catch (error) {

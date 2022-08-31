@@ -1,6 +1,6 @@
 import { CreateCategoryDto } from '@/dtos/categories.dto';
 import { OrderDto } from '@/dtos/orders.dto';
-import StatusCode from '@/interfaces/status.enum';
+import StatusResponse from '@/interfaces/status.enum';
 import OrdersService from '@/services/orders.service';
 import { Category, Order } from '@prisma/client';
 import { NextFunction, Request, Response } from 'express';
@@ -13,7 +13,7 @@ class OrdersController {
             const allOrders = await this.ordersService.findAll();
 
             res.status(200).json({
-                status: StatusCode.SUCCESS,
+                status: StatusResponse.SUCCESS,
                 data: allOrders,
             });
         } catch (error) {
@@ -27,7 +27,7 @@ class OrdersController {
             const order = await this.ordersService.findById(orderId);
 
             res.status(200).json({
-                status: StatusCode.SUCCESS,
+                status: StatusResponse.SUCCESS,
                 data: order,
             });
         } catch (error) {
@@ -41,7 +41,7 @@ class OrdersController {
             const order: Order = await this.ordersService.create(orderData);
 
             res.status(201).json({
-                status: StatusCode.SUCCESS,
+                status: StatusResponse.SUCCESS,
                 data: order,
             });
         } catch (error) {
@@ -56,7 +56,7 @@ class OrdersController {
             const order: Order = await this.ordersService.update(orderId, orderData);
 
             res.status(200).json({
-                status: StatusCode.SUCCESS,
+                status: StatusResponse.SUCCESS,
                 data: order,
             });
         } catch (error) {
@@ -70,7 +70,7 @@ class OrdersController {
             const order: Order = await this.ordersService.delete(orderId);
 
             res.status(200).json({
-                status: StatusCode.SUCCESS,
+                status: StatusResponse.SUCCESS,
                 data: order,
             });
         } catch (error) {

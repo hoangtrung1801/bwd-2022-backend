@@ -1,6 +1,6 @@
 import { hash } from 'bcrypt';
-import { PrismaClient, User } from '@prisma/client';
-import { CreateUserDto } from '@dtos/users.dto';
+import { Order, PrismaClient, User } from '@prisma/client';
+import { UserDto } from '@dtos/users.dto';
 import { HttpException } from '@exceptions/HttpException';
 import { isEmpty } from '@utils/util';
 
@@ -21,7 +21,7 @@ class UserService {
         return findUser;
     }
 
-    public async createUser(userData: CreateUserDto): Promise<User> {
+    public async createUser(userData: UserDto): Promise<User> {
         if (isEmpty(userData)) throw new HttpException(400, 'userData is empty');
 
         const findUser: User = await this.users.findUnique({ where: { email: userData.email } });
@@ -32,14 +32,13 @@ class UserService {
         return createUserData;
     }
 
-    public async updateUser(userId: string, userData: CreateUserDto): Promise<User> {
-        if (isEmpty(userData)) throw new HttpException(400, 'userData is empty');
+    public async updateUser(userId: string, userData: UserDto): Promise<User> {
+        if (isEmpty(userId)) throw new HttpException(400, 'userId is empty');
 
         const findUser: User = await this.users.findUnique({ where: { id: userId } });
         if (!findUser) throw new HttpException(409, "User doesn't exist");
 
-        const hashedPassword = await hash(userData.password, 10);
-        const updateUserData = await this.users.update({ where: { id: userId }, data: { ...userData, password: hashedPassword } });
+        const updateUserData = await this.users.update({ where: { id: userId }, data: { ...userData } });
         return updateUserData;
     }
 
@@ -52,6 +51,12 @@ class UserService {
         const deleteUserData = await this.users.delete({ where: { id: userId } });
         return deleteUserData;
     }
+
+    // public async findUserOrders(userId: string): Promise<Order[]> {
+    //     if (isEmpty(userId)) throw new HttpException(400, "User doesn't existId");
+
+    //     const foundUser: User = await this.usersi
+    // }
 }
 
 export default UserService;

@@ -2,7 +2,7 @@ import { compare, hash } from 'bcrypt';
 import { sign } from 'jsonwebtoken';
 import { PrismaClient, User } from '@prisma/client';
 import { SECRET_KEY } from '@config';
-import { CreateUserDto } from '@dtos/users.dto';
+import { UserDto } from '@dtos/users.dto';
 import { HttpException } from '@exceptions/HttpException';
 import { DataStoredInToken, TokenData } from '@interfaces/auth.interface';
 import { isEmpty } from '@utils/util';
@@ -10,7 +10,7 @@ import { isEmpty } from '@utils/util';
 class AuthService {
     public users = new PrismaClient().user;
 
-    public async signup(userData: CreateUserDto): Promise<User> {
+    public async signup(userData: UserDto): Promise<User> {
         if (isEmpty(userData)) throw new HttpException(400, 'userData is empty');
 
         const findUser: User = await this.users.findUnique({ where: { email: userData.email } });
@@ -22,7 +22,7 @@ class AuthService {
         return createUserData;
     }
 
-    public async login(userData: CreateUserDto): Promise<{ cookie: string; findUser: User }> {
+    public async login(userData: UserDto): Promise<{ cookie: string; findUser: User }> {
         if (isEmpty(userData)) throw new HttpException(400, 'userData is empty');
 
         const findUser: User = await this.users.findUnique({ where: { email: userData.email } });

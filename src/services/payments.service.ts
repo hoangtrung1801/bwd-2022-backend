@@ -62,6 +62,17 @@ class PaymentsService {
         const payment = await this.payments.delete({ where: { id: paymentId } });
         return payment;
     }
+
+    public async findByUser(userId: string): Promise<Payment[]> {
+        if (isEmpty(userId)) throw new HttpException(400, 'userId is empty');
+
+        const userPayments = await this.payments.findMany({
+            where: {
+                userID: userId,
+            },
+        });
+        return userPayments;
+    }
 }
 
 export default PaymentsService;

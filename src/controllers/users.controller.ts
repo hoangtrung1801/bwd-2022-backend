@@ -1,16 +1,21 @@
+import StatusResponse from '@/interfaces/status.enum';
+import OrdersService from '@/services/orders.service';
+import PaymentsService from '@/services/payments.service';
+import { UserDto } from '@dtos/users.dto';
+import { Order, Payment, User } from '@prisma/client';
+import UsersService from '@services/users.service';
 import { NextFunction, Request, Response } from 'express';
-import { User } from '@prisma/client';
-import { CreateUserDto } from '@dtos/users.dto';
-import userService from '@services/users.service';
 
 class UsersController {
-    public userService = new userService();
+    public userService = new UsersService();
+    public orderService = new OrdersService();
+    public paymentsService = new PaymentsService();
 
     public getUsers = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         try {
             const findAllUsersData: User[] = await this.userService.findAllUser();
 
-            res.status(200).json({ data: findAllUsersData, message: 'findAll' });
+            res.status(200).json({ status: StatusResponse.SUCCESS, data: findAllUsersData });
         } catch (error) {
             next(error);
         }
@@ -21,7 +26,7 @@ class UsersController {
             const userId = String(req.params.id);
             const findOneUserData: User = await this.userService.findUserById(userId);
 
-            res.status(200).json({ data: findOneUserData, message: 'findOne' });
+            res.status(200).json({ status: StatusResponse.SUCCESS, data: findOneUserData });
         } catch (error) {
             next(error);
         }
@@ -29,10 +34,10 @@ class UsersController {
 
     public createUser = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         try {
-            const userData: CreateUserDto = req.body;
-            const createUserData: User = await this.userService.createUser(userData);
+            const userData: UserDto = req.body;
+            const user: User = await this.userService.createUser(userData);
 
-            res.status(201).json({ data: createUserData, message: 'created' });
+            res.status(201).json({ status: StatusResponse.SUCCESS, data: user });
         } catch (error) {
             next(error);
         }
@@ -41,10 +46,10 @@ class UsersController {
     public updateUser = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         try {
             const userId = String(req.params.id);
-            const userData: CreateUserDto = req.body;
-            const updateUserData: User = await this.userService.updateUser(userId, userData);
+            const userData: UserDto = req.body;
+            const user: User = await this.userService.updateUser(userId, userData);
 
-            res.status(200).json({ data: updateUserData, message: 'updated' });
+            res.status(200).json({ status: StatusResponse.SUCCESS, data: user });
         } catch (error) {
             next(error);
         }
@@ -53,9 +58,38 @@ class UsersController {
     public deleteUser = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         try {
             const userId = String(req.params.id);
-            const deleteUserData: User = await this.userService.deleteUser(userId);
+            const user: User = await this.userService.deleteUser(userId);
 
-            res.status(200).json({ data: deleteUserData, message: 'deleted' });
+            res.status(200).json({ status: StatusResponse.SUCCESS, data: user });
+        } catch (error) {
+            next(error);
+        }
+    };
+
+    public getUserOrders = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+        try {
+            const userId = String(req.params.id);
+            const userOrders: Order[] = await this.orderService.findByUser(userId);
+
+            res.status(200).json({
+                status: StatusResponse.SUCCESS,
+                data: userOrders,
+            });
+        } catch (error) {
+            next(error);
+        }
+    };
+
+    public getUserPayments = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+        try {
+            const userId = String(req.params.id);
+            console.log(userId);
+            const userPayments: Payment[] = await this.paymentsService.findByUser(userId);
+
+            res.status(200).json({
+                status: StatusResponse.SUCCESS,
+                data: userPayments,
+            });
         } catch (error) {
             next(error);
         }

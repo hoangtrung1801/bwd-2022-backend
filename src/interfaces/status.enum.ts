@@ -1,6 +1,6 @@
-enum StatusCode {
+enum StatusResponse {
     SUCCESS = 'success',
     FAILED = 'failed',
 }
 
-export default StatusCode;
+export default StatusResponse;

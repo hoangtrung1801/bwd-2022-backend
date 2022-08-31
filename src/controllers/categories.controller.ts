@@ -1,5 +1,5 @@
 import { CreateCategoryDto } from '@/dtos/categories.dto';
-import StatusCode from '@/interfaces/status.enum';
+import StatusResponse from '@/interfaces/status.enum';
 import CategoriesService from '@/services/categories.service';
 import { Category } from '@prisma/client';
 import { NextFunction, Request, Response } from 'express';
@@ -12,7 +12,7 @@ class CategoriesController {
             const allCategories = await this.categoriesService.findAll();
 
             res.status(200).json({
-                status: StatusCode.SUCCESS,
+                status: StatusResponse.SUCCESS,
                 data: allCategories,
             });
         } catch (error) {
@@ -26,7 +26,7 @@ class CategoriesController {
             const category = await this.categoriesService.findById(categoryId);
 
             res.status(200).json({
-                status: StatusCode.SUCCESS,
+                status: StatusResponse.SUCCESS,
                 data: category,
             });
         } catch (error) {
@@ -40,7 +40,7 @@ class CategoriesController {
             const category: Category = await this.categoriesService.create(categoryData);
 
             res.status(201).json({
-                status: StatusCode.SUCCESS,
+                status: StatusResponse.SUCCESS,
                 data: category,
             });
         } catch (error) {
@@ -55,7 +55,7 @@ class CategoriesController {
             const category: Category = await this.categoriesService.update(categoryId, categoryData);
 
             res.status(200).json({
-                status: StatusCode.SUCCESS,
+                status: StatusResponse.SUCCESS,
                 data: category,
             });
         } catch (error) {
@@ -69,7 +69,7 @@ class CategoriesController {
             const category: Category = await this.categoriesService.delete(categoryId);
 
             res.status(200).json({
-                status: StatusCode.SUCCESS,
+                status: StatusResponse.SUCCESS,
                 data: category,
             });
         } catch (error) {
