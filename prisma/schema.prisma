@@ -45,22 +45,22 @@ model Order {
   id         String      @id @default(auto()) @map("_id") @db.ObjectId
   total      Float
   items      OrderItem[]
-  payment    Payment     @relation(fields: [paymentID], references: [id])
-  paymentID  String      @unique @db.ObjectId
+  itemIDs    String[]
+  payment    Payment?    @relation(fields: [paymentID], references: [id])
+  paymentID  String?     @unique @db.ObjectId
   createdAt  DateTime    @default(now())
   modifiedAt DateTime    @default(now()) @updatedAt
-  paymentId  String      @db.ObjectId
 }
 
 model Payment {
   id         String        @id @default(auto()) @map("_id") @db.ObjectId
   status     PaymentStatus @default(WAITING)
-  user       User          @relation(fields: [userId], references: [id])
+  user       User          @relation(fields: [userID], references: [id])
+  userID     String        @db.ObjectId
   order      Order?
-  orderID    String        @db.ObjectId
+  orderID    String?       @db.ObjectId
   createdAt  DateTime      @default(now())
   modifiedAt DateTime      @default(now()) @updatedAt
-  userId     String        @db.ObjectId
 }
 
 model Category {
@@ -72,11 +72,11 @@ model Category {
 
 model OrderItem {
   id        String  @id @default(auto()) @map("_id") @db.ObjectId
-  product   Product @relation(fields: [productId], references: [id])
-  productId String  @db.ObjectId
+  product   Product @relation(fields: [productID], references: [id])
+  productID String  @db.ObjectId
   quantity  Int
-  Order     Order?  @relation(fields: [orderId], references: [id])
-  orderId   String? @db.ObjectId
+  Order     Order?  @relation(fields: [orderID], references: [id])
+  orderID   String? @db.ObjectId
 }
 
 enum PaymentStatus {
