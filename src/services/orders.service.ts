@@ -1,11 +1,12 @@
-import { OrderDto } from '@/dtos/orders.dto';
+import { CreateOrderDto, OrderDto } from '@/dtos/orders.dto';
 import { HttpException } from '@/exceptions/HttpException';
-import { Order, Payment, PrismaClient } from '@prisma/client';
+import { Order, OrderItem, Payment, PrismaClient } from '@prisma/client';
 import { isEmpty } from 'class-validator';
 
 class OrdersService {
     public orders = new PrismaClient().order;
     public payments = new PrismaClient().payment;
+    public orderItems = new PrismaClient().orderItem;
 
     public async findAll(): Promise<Order[]> {
         const allOrders = await this.orders.findMany({
@@ -26,15 +27,20 @@ class OrdersService {
         return foundOrder;
     }
 
-    public async create(orderData: OrderDto): Promise<Order> {
+    public async create(orderData: CreateOrderDto, orderItemIDs: string[], paymentID: string): Promise<Order> {
         if (isEmpty(orderData)) throw new HttpException(400, 'Order is empty');
 
-        const { itemIDs, paymentID, total } = orderData;
+        const { total } = orderData;
+
         const createOrder: Order = await this.orders.create({
             data: {
                 total,
-                itemIDs,
-                paymentID: paymentID || null,
+                itemIDs: orderItemIDs,
+                paymentID: paymentID,
+            },
+            include: {
+                items: true,
+                payment: true,
             },
         });
 

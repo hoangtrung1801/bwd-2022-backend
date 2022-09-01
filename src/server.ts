@@ -7,6 +7,7 @@ import CategoriesRoute from './routes/categories.route';
 import OrdersRoute from './routes/orders.route';
 import PaymentsRoute from './routes/payments.route';
 import ProductsRoute from './routes/products.route';
+import TestRoute from './routes/test.route';
 
 validateEnv();
 
@@ -18,6 +19,9 @@ const app = new App([
     new CategoriesRoute(),
     new OrdersRoute(),
     new PaymentsRoute(),
+
+    // test route
+    new TestRoute(),
 ]);
 
 app.listen();

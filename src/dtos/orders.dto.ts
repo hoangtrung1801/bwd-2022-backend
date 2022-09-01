@@ -1,4 +1,5 @@
-import { IsEmpty, IsMongoId, IsNumber, IsOptional, ValidateIf } from 'class-validator';
+import { IsEmpty, IsMongoId, IsNumber, IsObject, IsOptional, ValidateIf, ValidateNested } from 'class-validator';
+import { CreateOrderItemDto, OrderItemDto } from './orderItems.dto';
 
 export class OrderDto {
     @IsMongoId()
@@ -20,9 +21,10 @@ export class CreateOrderDto {
     @IsNumber()
     public total: number;
 
-    @IsMongoId({ each: true })
-    public itemIDs: string[];
+    @IsObject({ each: true })
+    public items: CreateOrderItemDto[];
 
-    @IsMongoId()
-    public paymentID: string;
+    // @IsMongoId()
+    // @IsOptional()
+    // public paymentID: string;
 }

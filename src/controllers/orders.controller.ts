@@ -1,12 +1,15 @@
-import { CreateCategoryDto } from '@/dtos/categories.dto';
-import { OrderDto } from '@/dtos/orders.dto';
+import { CreateOrderDto, OrderDto } from '@/dtos/orders.dto';
 import StatusResponse from '@/interfaces/status.enum';
+import OrderItemsService from '@/services/orderItems.service';
 import OrdersService from '@/services/orders.service';
-import { Category, Order } from '@prisma/client';
+import PaymentsService from '@/services/payments.service';
+import { Order, OrderItem, Payment, PaymentStatus } from '@prisma/client';
 import { NextFunction, Request, Response } from 'express';
 
 class OrdersController {
     public ordersService = new OrdersService();
+    public orderItemsService = new OrderItemsService();
+    public paymentService = new PaymentsService();
 
     public getAllOrders = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         try {
@@ -37,8 +40,30 @@ class OrdersController {
 
     public createOrder = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         try {
-            const orderData: OrderDto = req.body;
-            const order: Order = await this.ordersService.create(orderData);
+            const orderData: CreateOrderDto = req.body;
+
+            // create payment
+            const payment: Payment = await this.paymentService.create({
+                status: PaymentStatus.WAITING,
+            });
+
+            // create order items
+            const orderItems: OrderItem[] = await Promise.all(orderData.items.map(async item => await this.orderItemsService.create(item)));
+
+            // create order
+            const order: Order = await this.ordersService.create(
+                orderData,
+                orderItems.map(item => item.id),
+                payment.id,
+            );
+
+            // update payment with orderId
+            await this.paymentService.update(payment.id, {
+                orderID: order.id,
+            });
+
+            // update orderItems with orderId
+            await Promise.all(orderItems.map(async item => await this.orderItemsService.update(item.id, { orderID: order.id })));
 
             res.status(201).json({
                 status: StatusResponse.SUCCESS,

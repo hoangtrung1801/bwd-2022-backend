@@ -1,4 +1,4 @@
-import { PaymentDto } from '@/dtos/payments.dto';
+import { CreatePaymentDto, PaymentDto } from '@/dtos/payments.dto';
 import { ProductDto } from '@/dtos/products.dto';
 import { HttpException } from '@/exceptions/HttpException';
 import { isEmpty } from '@/utils/util';
@@ -27,13 +27,15 @@ class PaymentsService {
         return foundPayment;
     }
 
-    public async create(paymentData: PaymentDto): Promise<Payment> {
+    public async create(paymentData: CreatePaymentDto): Promise<Payment> {
         if (isEmpty(paymentData)) throw new HttpException(400, 'Payment is empty');
 
-        const { orderID, status, userID } = paymentData;
+        // get user id
+        const userID = '630f4564f724061d99d38a0d';
+
+        const { status } = paymentData;
         const createProduct: Payment = await this.payments.create({
             data: {
-                orderID: orderID || null,
                 status,
                 userID,
             },

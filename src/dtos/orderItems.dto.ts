@@ -1,11 +1,22 @@
-import { IsMongoId, IsNumber, IsOptional } from 'class-validator';
+import { IsMongoId, IsNumber, IsOptional, IsPositive, IsPostalCode, IsString } from 'class-validator';
 
 export class OrderItemDto {
     @IsMongoId()
     @IsOptional()
-    public id: string;
+    public id?: string;
 
-    @IsNumber()
+    @IsPositive()
+    public quantity?: number;
+
+    @IsMongoId()
+    public productID?: string;
+
+    @IsMongoId()
+    public orderID?: string;
+}
+
+export class CreateOrderItemDto {
+    @IsPositive()
     public quantity: number;
 
     @IsMongoId()
