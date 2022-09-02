@@ -1,5 +1,7 @@
 import { Routes } from '@/interfaces/routes.interface';
-import { PrismaClient } from '@prisma/client';
+import authMiddleware from '@/middlewares/auth.middleware';
+import minimumPermissionLevelRequried from '@/middlewares/permission.middleware';
+import { PrismaClient, Role } from '@prisma/client';
 import { Request, Response, Router } from 'express';
 
 class TestRoute implements Routes {
@@ -12,14 +14,10 @@ class TestRoute implements Routes {
     }
 
     private initializeRoutes() {
-        this.router.get('/', this.doing);
+        this.router.get('/', minimumPermissionLevelRequried(Role.USER), this.doing);
     }
 
     public doing = async (req: Request, res: Response): Promise<void> => {
-        await this.prisma.order.deleteMany();
-        await this.prisma.orderItem.deleteMany();
-        await this.prisma.payment.deleteMany();
-
         res.sendStatus(200);
     };
 }

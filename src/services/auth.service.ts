@@ -56,11 +56,11 @@ class AuthService {
         const secretKey: string = SECRET_KEY;
         const expiresIn: number = 60 * 60;
 
-        return { expiresIn, token: sign(dataStoredInToken, secretKey, { expiresIn }) };
+        return { expiresIn, token: sign(dataStoredInToken, secretKey, {}) };
     }
 
     public createCookie(tokenData: TokenData): string {
-        return `Authorization=${tokenData.token}; HttpOnly; Max-Age=${tokenData.expiresIn};`;
+        return `Authorization=Bearer ${tokenData.token}; HttpOnly; Max-Age=${tokenData.expiresIn};`;
     }
 }
 
