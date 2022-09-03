@@ -8,7 +8,7 @@ const minimumPermissionLevelRequried = (permissionRequired: Role) => {
         const permissionLevelRequired = convertRoleEnum(permissionRequired);
 
         if (permissionLevel < permissionLevelRequired) {
-            next(new HttpException(403, "Don't allow to access"));
+            next(new HttpException(403, `Guest don't allow to access`));
         }
         next();
     };

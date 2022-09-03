@@ -8,6 +8,9 @@ export class CategoryDto {
     @IsString()
     public name: string;
 
+    @IsString()
+    public label: string;
+
     @IsString({ each: true })
     public productIDs: string[];
 }
@@ -16,6 +19,9 @@ export class CreateCategoryDto {
     @IsString()
     public name: string;
 
+    @IsString()
+    public label: string;
+
     @IsString({ each: true })
-    public productIDs: string[];
+    public productIDs: string[] = [];
 }

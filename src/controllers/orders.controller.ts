@@ -1,4 +1,5 @@
 import { CreateOrderDto, OrderDto } from '@/dtos/orders.dto';
+import { HttpException } from '@/exceptions/HttpException';
 import StatusResponse from '@/interfaces/status.enum';
 import OrderItemsService from '@/services/orderItems.service';
 import OrdersService from '@/services/orders.service';
@@ -42,10 +43,16 @@ class OrdersController {
         try {
             const orderData: CreateOrderDto = req.body;
 
+            // get userID
+            const userID = req['user'].id;
+
             // create payment
-            const payment: Payment = await this.paymentService.create({
-                status: PaymentStatus.WAITING,
-            });
+            const payment: Payment = await this.paymentService.create(
+                {
+                    status: PaymentStatus.WAITING,
+                },
+                userID,
+            );
 
             // create order items
             const orderItems: OrderItem[] = await Promise.all(orderData.items.map(async item => await this.orderItemsService.create(item)));

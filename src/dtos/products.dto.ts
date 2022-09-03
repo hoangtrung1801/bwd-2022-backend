@@ -1,23 +1,27 @@
 import { Exclude } from 'class-transformer';
-import { IsDecimal, IsMongoId, IsNumber, IsString } from 'class-validator';
+import { IsDecimal, IsMongoId, IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class ProductDto {
     @IsString()
     @IsMongoId()
-    // @Exclude()
-    public id: string;
+    @IsOptional()
+    public id?: string;
 
     @IsString()
-    public name: string;
+    @IsOptional()
+    public name?: string;
 
     @IsString()
-    public desc: string;
+    @IsOptional()
+    public desc?: string;
 
     @IsDecimal()
-    public price: number;
+    @IsOptional()
+    public price?: number;
 
     @IsString({ each: true })
-    public categoryIDs: string[];
+    @IsOptional()
+    public categoryIDs?: string[];
 }
 
 export class CreateProductDto {
@@ -40,5 +44,5 @@ export class CreateProductDto {
     public price: number;
 
     @IsString({ each: true })
-    public categoryIDs: string[];
+    public categoryIDs: string[] = [];
 }

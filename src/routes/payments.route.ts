@@ -2,7 +2,9 @@ import PaymentsController from '@/controllers/payments.controller';
 import { PaymentDto } from '@/dtos/payments.dto';
 import { CreateProductDto, ProductDto } from '@/dtos/products.dto';
 import { Routes } from '@/interfaces/routes.interface';
+import minimumPermissionLevelRequried from '@/middlewares/permission.middleware';
 import validationMiddleware from '@/middlewares/validation.middleware';
+import { Role } from '@prisma/client';
 import { Router } from 'express';
 
 class PaymentsRoute implements Routes {
@@ -15,6 +17,7 @@ class PaymentsRoute implements Routes {
     }
 
     private initializeRoutes() {
+        this.router.use(minimumPermissionLevelRequried(Role.USER));
         this.router.get('/', this.paymentsController.getAllPayments);
         this.router.get('/:id', this.paymentsController.getPayment);
         this.router.post('/', validationMiddleware(PaymentDto, 'body'), this.paymentsController.createPayment);

@@ -9,10 +9,10 @@ class PaymentsService {
 
     public async findAll(): Promise<Payment[]> {
         const allPayments = await this.payments.findMany({
-            include: {
-                order: true,
-                user: true,
-            },
+            // include: {
+            //     order: true,
+            //     user: true,
+            // },
         });
 
         return Promise.resolve(allPayments);
@@ -27,11 +27,9 @@ class PaymentsService {
         return foundPayment;
     }
 
-    public async create(paymentData: CreatePaymentDto): Promise<Payment> {
+    public async create(paymentData: CreatePaymentDto, userID: string): Promise<Payment> {
         if (isEmpty(paymentData)) throw new HttpException(400, 'Payment is empty');
-
-        // get user id
-        const userID = '630f4564f724061d99d38a0d';
+        if (isEmpty(userID)) throw new HttpException(400, 'UserID is empty');
 
         const { status } = paymentData;
         const createProduct: Payment = await this.payments.create({

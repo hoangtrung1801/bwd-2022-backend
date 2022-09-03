@@ -10,11 +10,6 @@ generator client {
   provider = "prisma-client-js"
 }
 
-enum Role {
-  USER
-  ADMIN
-}
-
 model User {
   id         String    @id @default(auto()) @map("_id") @db.ObjectId
   email      String    @unique
@@ -34,6 +29,7 @@ model Product {
   name        String
   desc        String
   price       Float
+  // imageUrls   String[]
   categoryIDs String[]    @db.ObjectId
   categories  Category[]  @relation(fields: [categoryIDs], references: [id])
   createdAt   DateTime    @default(now())
@@ -46,7 +42,7 @@ model Order {
   total      Float
   items      OrderItem[]
   itemIDs    String[]
-  payment    Payment?    @relation(fields: [paymentID], references: [id])
+  payment    Payment?    @relation(fields: [paymentID], references: [id], onDelete: Cascade)
   paymentID  String?     @unique @db.ObjectId
   createdAt  DateTime    @default(now())
   modifiedAt DateTime    @default(now()) @updatedAt
@@ -55,7 +51,7 @@ model Order {
 model Payment {
   id         String        @id @default(auto()) @map("_id") @db.ObjectId
   status     PaymentStatus @default(WAITING)
-  user       User          @relation(fields: [userID], references: [id])
+  user       User          @relation(fields: [userID], references: [id], onDelete: Cascade)
   userID     String        @db.ObjectId
   order      Order?
   orderID    String?       @db.ObjectId
@@ -66,16 +62,17 @@ model Payment {
 model Category {
   id         String    @id @default(auto()) @map("_id") @db.ObjectId
   name       String
+  label      String
   productIDs String[]  @db.ObjectId
   products   Product[] @relation(fields: [productIDs], references: [id])
 }
 
 model OrderItem {
   id        String  @id @default(auto()) @map("_id") @db.ObjectId
-  product   Product @relation(fields: [productID], references: [id])
+  product   Product @relation(fields: [productID], references: [id], onDelete: Cascade)
   productID String  @db.ObjectId
   quantity  Int
-  Order     Order?  @relation(fields: [orderID], references: [id])
+  Order     Order?  @relation(fields: [orderID], references: [id], onDelete: Cascade)
   orderID   String? @db.ObjectId
 }
 
@@ -83,6 +80,11 @@ enum PaymentStatus {
   WAITING
   SHIPPING
   COMPLETED
+}
+
+enum Role {
+  USER
+  ADMIN
 }
 
 type Address {

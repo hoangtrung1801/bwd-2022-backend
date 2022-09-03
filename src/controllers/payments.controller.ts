@@ -36,8 +36,11 @@ class PaymentsController {
 
     public createPayment = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         try {
+            // get userID
+            const userID = req['user'].id;
+
             const paymentData: PaymentDto = req.body;
-            const payment: Payment = await this.productsService.create(paymentData);
+            const payment: Payment = await this.productsService.create(paymentData, userID);
 
             res.status(201).json({
                 status: StatusResponse.SUCCESS,

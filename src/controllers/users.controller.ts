@@ -83,7 +83,6 @@ class UsersController {
     public getUserPayments = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         try {
             const userId = String(req.params.id);
-            console.log(userId);
             const userPayments: Payment[] = await this.paymentsService.findByUser(userId);
 
             res.status(200).json({

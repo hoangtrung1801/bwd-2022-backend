@@ -1,4 +1,5 @@
-import { IsEmail, IsMongoId, IsObject, IsOptional, IsPhoneNumber, IsString } from 'class-validator';
+import { Role } from '@prisma/client';
+import { IsEmail, IsEnum, IsMongoId, IsObject, IsOptional, IsPhoneNumber, IsString } from 'class-validator';
 
 export class UserDto {
     @IsMongoId()
@@ -19,6 +20,9 @@ export class UserDto {
 
     @IsString()
     public phone: string;
+
+    @IsString()
+    public role: Role = Role.USER;
 
     @IsObject()
     public address: {

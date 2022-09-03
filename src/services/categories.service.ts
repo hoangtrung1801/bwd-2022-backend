@@ -28,14 +28,12 @@ class CategoriesService {
     public async create(categoryData: CreateCategoryDto): Promise<Category> {
         if (isEmpty(categoryData)) throw new HttpException(400, 'Category is empty');
 
-        const { name, productIDs } = categoryData;
+        const { name, label, productIDs } = categoryData;
         const createProduct: Category = await this.categories.create({
             data: {
                 name,
+                label,
                 productIDs,
-            },
-            include: {
-                products: true,
             },
         });
 

@@ -46,7 +46,7 @@ class ProductsService {
     }
 
     public async update(productId: string, productData: ProductDto): Promise<Product> {
-        if (isEmpty(productData)) throw new HttpException(400, 'Product is empty');
+        if (isEmpty(productId)) throw new HttpException(400, 'productId is empty');
 
         const findProduct: Product = await this.products.findUnique({ where: { id: productId } });
         if (!findProduct) throw new HttpException(409, "Product doesn't exist");
@@ -58,7 +58,7 @@ class ProductsService {
     }
 
     public async delete(producId: string): Promise<Product> {
-        if (isEmpty(producId)) throw new HttpException(400, 'Product is empty');
+        if (isEmpty(producId)) throw new HttpException(400, 'productId is empty');
 
         const findProduct: Product = await this.products.findUnique({ where: { id: producId } });
         if (!findProduct) throw new HttpException(409, "Product doesn't exist");

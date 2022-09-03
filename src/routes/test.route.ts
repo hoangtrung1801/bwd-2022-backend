@@ -14,7 +14,7 @@ class TestRoute implements Routes {
     }
 
     private initializeRoutes() {
-        this.router.get('/', minimumPermissionLevelRequried(Role.USER), this.doing);
+        this.router.get('/', this.doing);
     }
 
     public doing = async (req: Request, res: Response): Promise<void> => {
