@@ -29,7 +29,7 @@ model Product {
   name        String
   desc        String
   price       Float
-  // imageUrls   String[]
+  images      String[]
   categoryIDs String[]    @db.ObjectId
   categories  Category[]  @relation(fields: [categoryIDs], references: [id])
   createdAt   DateTime    @default(now())

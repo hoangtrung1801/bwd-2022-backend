@@ -29,13 +29,14 @@ class ProductsService {
     public async create(productData: CreateProductDto): Promise<Product> {
         if (isEmpty(productData)) throw new HttpException(400, 'Product is empty');
 
-        const { name, desc, price, categoryIDs } = productData;
+        const { name, desc, price, categoryIDs, images } = productData;
         const createProduct: Product = await this.products.create({
             data: {
                 name,
                 desc,
                 price,
                 categoryIDs,
+                images,
             },
             include: {
                 categories: true,

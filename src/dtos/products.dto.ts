@@ -21,6 +21,10 @@ export class ProductDto {
 
     @IsString({ each: true })
     @IsOptional()
+    public images?: string[];
+
+    @IsString({ each: true })
+    @IsOptional()
     public categoryIDs?: string[];
 }
 
@@ -42,6 +46,9 @@ export class CreateProductDto {
 
     @IsNumber()
     public price: number;
+
+    @IsString({ each: true })
+    public images: string[] = [];
 
     @IsString({ each: true })
     public categoryIDs: string[] = [];
