@@ -17,7 +17,7 @@ class ProductsRoute implements Routes {
     private initializeRoutes() {
         this.router.get('/', this.productsController.getAllProducts);
         this.router.get('/:id', this.productsController.getProduct);
-        this.router.post('/', resolveImageMiddware, validationMiddleware(CreateProductDto, 'body'), this.productsController.createProduct);
+        this.router.post('/', validationMiddleware(CreateProductDto, 'body'), this.productsController.createProduct);
         this.router.put('/:id', validationMiddleware(ProductDto, 'body', true), this.productsController.updateProduct);
         this.router.delete('/:id', this.productsController.deleteProduct);
     }

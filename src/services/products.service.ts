@@ -1,12 +1,11 @@
 import { CreateProductDto, ProductDto } from '@/dtos/products.dto';
 import { HttpException } from '@/exceptions/HttpException';
-import Service from '@/interfaces/service.interface';
 import { isEmpty } from '@/utils/util';
-import { PrismaClient, Product } from '@prisma/client';
-import { plainToClass, plainToInstance } from 'class-transformer';
+import { Prisma, PrismaClient, Product } from '@prisma/client';
 
 class ProductsService {
     public products = new PrismaClient().product;
+    public categories = new PrismaClient().category;
 
     public async findAll(): Promise<Product[]> {
         const allProducts = await this.products.findMany({
@@ -29,8 +28,9 @@ class ProductsService {
     public async create(productData: CreateProductDto): Promise<Product> {
         if (isEmpty(productData)) throw new HttpException(400, 'Product is empty');
 
+        // create product
         const { name, desc, price, categoryIDs, images } = productData;
-        const createProduct: Product = await this.products.create({
+        const product: Product = await this.products.create({
             data: {
                 name,
                 desc,
@@ -38,12 +38,23 @@ class ProductsService {
                 categoryIDs,
                 images,
             },
-            include: {
-                categories: true,
+        });
+
+        // update category with this product
+        await this.categories.updateMany({
+            where: {
+                id: {
+                    in: categoryIDs,
+                },
+            },
+            data: {
+                productIDs: {
+                    push: product.id,
+                },
             },
         });
 
-        return createProduct;
+        return product;
     }
 
     public async update(productId: string, productData: ProductDto): Promise<Product> {
