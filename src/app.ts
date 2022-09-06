@@ -2,7 +2,7 @@ import compression from 'compression';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import express from 'express';
-import helmet from 'helmet';
+import helmet, { originAgentCluster } from 'helmet';
 import hpp from 'hpp';
 import morgan from 'morgan';
 import swaggerJSDoc from 'swagger-jsdoc';
@@ -44,6 +44,7 @@ class App {
 
     private initializeMiddlewares() {
         this.app.use(morgan(LOG_FORMAT, { stream }));
+        // this.app.use(cors());
         this.app.use(cors({ origin: ORIGIN, credentials: CREDENTIALS }));
         this.app.use(hpp());
         this.app.use(helmet());
