@@ -29,7 +29,7 @@ class ProductsService {
         if (isEmpty(productData)) throw new HttpException(400, 'Product is empty');
 
         // create product
-        const { name, desc, price, categoryIDs, images } = productData;
+        const { name, desc, price, categoryIDs, images, reviews } = productData;
         const product: Product = await this.products.create({
             data: {
                 name,
@@ -37,6 +37,7 @@ class ProductsService {
                 price,
                 categoryIDs,
                 images,
+                reviews,
             },
         });
 
@@ -63,8 +64,17 @@ class ProductsService {
         const findProduct: Product = await this.products.findUnique({ where: { id: productId } });
         if (!findProduct) throw new HttpException(409, "Product doesn't exist");
 
+        if (productData.reviews) findProduct.reviews.push(...productData.reviews);
         // const updateProducData = plainToInstance(ProductDto, productData);
-        const product = await this.products.update({ where: { id: productId }, data: { ...productData } });
+        const product = await this.products.update({
+            where: { id: productId },
+            data: {
+                ...productData,
+                reviews: findProduct.reviews,
+                // reviews: [...findProduct.reviews,
+                // ],
+            },
+        });
 
         return product;
     }

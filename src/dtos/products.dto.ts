@@ -1,5 +1,6 @@
 import { Exclude } from 'class-transformer';
-import { IsDecimal, IsMongoId, IsNumber, IsOptional, IsString } from 'class-validator';
+import { IsDecimal, IsMongoId, IsNumber, IsObject, IsOptional, IsString } from 'class-validator';
+import { Review } from '@prisma/client';
 
 export class ProductDto {
     @IsString()
@@ -26,6 +27,10 @@ export class ProductDto {
     @IsString({ each: true })
     @IsOptional()
     public categoryIDs?: string[];
+
+    @IsObject({ each: true })
+    @IsOptional()
+    public reviews?: Review[];
 }
 
 export class CreateProductDto {
@@ -52,4 +57,7 @@ export class CreateProductDto {
 
     @IsString({ each: true })
     public categoryIDs: string[] = [];
+
+    @IsObject({ each: true })
+    public reviews: Review[] = [];
 }
