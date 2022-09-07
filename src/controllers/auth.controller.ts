@@ -62,7 +62,12 @@ class AuthController {
                     status: StatusResponse.SUCCESS,
                     data: user,
                 });
-            next(new HttpException(400, 'Token is required'));
+            else {
+                // next(new HttpException(401, 'Token is required'));
+                res.status(200).json({
+                    status: StatusResponse.FAILED,
+                });
+            }
         } catch (error) {
             next(error);
         }
