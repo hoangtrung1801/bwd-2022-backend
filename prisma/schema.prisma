@@ -77,6 +77,16 @@ model OrderItem {
   orderID   String? @db.ObjectId
 }
 
+model Donation {
+  id         String    @id @default(auto()) @map("_id") @db.ObjectId
+  name       String
+  desc       String
+  target     Int
+  expiryDate DateTime
+  image      String
+  donator    Donator[]
+}
+
 enum PaymentStatus {
   WAITING
   SHIPPING
@@ -100,4 +110,10 @@ type Review {
   reviewText String
   rating     Float
   createdAt  DateTime @default(now())
+}
+
+type Donator {
+  userID    String
+  amount    BigInt
+  createdAt DateTime @default(now())
 }
