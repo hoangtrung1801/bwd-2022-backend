@@ -45,7 +45,16 @@ class App {
     private initializeMiddlewares() {
         this.app.use(morgan(LOG_FORMAT, { stream }));
         // this.app.use(cors());
-        this.app.use(cors({ origin: ORIGIN, credentials: CREDENTIALS }));
+        // this.app.use(cors({ origin: ORIGIN, credentials: CREDENTIALS }));
+        this.app.use(
+            cors({
+                origin: (origin, callback) => {
+                    if (ORIGIN.indexOf(origin) !== -1) callback(null, true);
+                    else callback(new Error('Not allowed by CORS'));
+                },
+                credentials: CREDENTIALS,
+            }),
+        );
         this.app.use(hpp());
         this.app.use(helmet());
         this.app.use(compression());
