@@ -49,6 +49,7 @@ class App {
         this.app.use(
             cors({
                 origin: (origin, callback) => {
+                    return callback(null, true);
                     if (ORIGIN.indexOf(origin) !== -1) callback(null, true);
                     else callback(new Error('Not allowed by CORS'));
                 },

@@ -114,6 +114,6 @@ type Review {
 
 type Donator {
   userID    String
-  amount    BigInt
+  amount    Int
   createdAt DateTime @default(now())
 }

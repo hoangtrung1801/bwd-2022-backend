@@ -20,3 +20,8 @@ export class CreateDonationDto {
     @IsObject({ each: true })
     public donator: Donator[] = [];
 }
+
+export class DonatorDto {
+    @IsNumber()
+    public amount?: number;
+}
