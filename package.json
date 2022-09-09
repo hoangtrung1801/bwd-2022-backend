@@ -1,7 +1,7 @@
 {
   "name": "bwd-2022-backend",
-  "version": "0.0.0",
-  "description": "TypeScript + Prisma + MySQL + Express API Server",
+  "version": "1.0.0",
+  "description": "Best web desgin 2022 - LAVIE",
   "author": "",
   "license": "ISC",
   "main": "src/server.ts",
@@ -66,5 +66,8 @@
     "tsc-alias": "^1.7.0",
     "tsconfig-paths": "^4.0.0",
     "typescript": "^4.7.4"
+  },
+  "engines": {
+    "node": "14.x"
   }
 }
